@@ -54,7 +54,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(currentDate)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.ES256, secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
