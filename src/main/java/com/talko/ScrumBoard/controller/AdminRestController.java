@@ -1,9 +1,9 @@
-package com.talko.ScrumBoard.controller;
+package com.talko.ScrumBoard.rest;
 
-import com.talko.ScrumBoard.dto.UserDto;
+import com.talko.ScrumBoard.dto.AdminUserDto;
 import com.talko.ScrumBoard.model.User;
 import com.talko.ScrumBoard.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,25 +13,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/admin/")
+@RequiredArgsConstructor
 public class AdminRestController {
 
     private final UserService userService;
 
-    @Autowired
-    public AdminRestController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping(value = "/users/{id}")
-    private ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id) {
+    private ResponseEntity<AdminUserDto> getUserById(@PathVariable(name = "id") Long id) {
         User user = userService.findById(id);
 
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        UserDto userDto = UserDto.fromUser(user);
+        AdminUserDto adminUserDto = AdminUserDto.fromUser(user);
 
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<>(adminUserDto, HttpStatus.OK);
     }
 }

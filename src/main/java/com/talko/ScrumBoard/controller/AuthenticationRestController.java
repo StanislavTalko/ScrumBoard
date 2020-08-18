@@ -1,4 +1,4 @@
-package com.talko.ScrumBoard.controller;
+package com.talko.ScrumBoard.rest;
 
 import com.talko.ScrumBoard.dto.AuthenticationRequestDto;
 import com.talko.ScrumBoard.model.User;
@@ -11,9 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +27,8 @@ public class AuthenticationRestController {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public ResponseEntity login(@RequestParam AuthenticationRequestDto requestDto) {
+    @PostMapping("login")
+    public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
@@ -39,7 +38,7 @@ public class AuthenticationRestController {
                 throw new UsernameNotFoundException("User with username - " + username + " not found");
             }
 
-            String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+            String token = jwtTokenProvider.createToken(username, user.getRoles());
 
             Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
